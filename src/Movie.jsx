@@ -18,27 +18,40 @@ function Movies() {
     setMoviesData(movies.results);
     console.log(movies.results, "all movies from api");
   }
-
+  function AddToFav(movie) {
+    let favMovies = localStorage.getItem("fav-movies")
+      ? JSON.parse(localStorage.getItem("fav-movies"))
+      : [];
+    favMovies.push(movie);
+    localStorage.setItem("fav-movies", JSON.stringify(favMovies));
+  }
   useEffect(() => {
     fetchMovies();
   }, []);
+
   return (
     <div className="d-flex gap-4 flex-wrap mt-4 justify-content-center">
       {moviesData.map((movie) => (
-        <Link to={`/movie/${movie.id}`} key={movie.id}>
-          {" "}
-          <Card style={{ width: "18rem" }}>
+        <Card style={{ width: "18rem" }}>
+          <Link to={`/movie/${movie.id}`} key={movie.id}>
             <Card.Img
               variant="top"
               src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
             />
-            <Card.Body>
-              <Card.Title>{movie.title}</Card.Title>
-              <Card.Text>{movie.overview}</Card.Text>
-              <Button variant="primary">Add to fav</Button>
-            </Card.Body>
-          </Card>
-        </Link>
+          </Link>
+          <Card.Body>
+            <Card.Title>{movie.title}</Card.Title>
+            <Card.Text>{movie.overview}</Card.Text>
+            <Button
+              variant="primary"
+              onClick={() => {
+                AddToFav(movie);
+              }}
+            >
+              Add to fav
+            </Button>
+          </Card.Body>
+        </Card>
       ))}
     </div>
   );
